@@ -1,0 +1,10 @@
+[package]
+name = "rust_todo_list"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+console = {path = "/home/yatata/Software/Rust Crates/console-0.15.7"}
+rand = { path = "/home/yatata/Software/Rust Crates/rand-0.8.5"}
