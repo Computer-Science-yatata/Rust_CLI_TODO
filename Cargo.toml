@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 console = {path = "/home/yatata/Software/Rust Crates/console-0.15.7"}
 rand = { path = "/home/yatata/Software/Rust Crates/rand-0.8.5"}
+serde_json = { path = "/home/yatata/Software/Rust Crates/json-1.0.0"}

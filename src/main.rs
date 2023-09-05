@@ -6,6 +6,7 @@
 
 use console;
 use std;
+use serde_json;
 
 
 struct Value {
@@ -161,8 +162,8 @@ fn get_higher_id (todo_hasmap: &std::collections::HashMap<i32, Value>) -> i32{
 
     for (key, value) in todo_hasmap.iter() {
         
-        if (id < key){
-            id = key;
+        if (id < *key){
+            id = *key;
         }
     }
 
@@ -231,12 +232,87 @@ fn mark_as_done(terminal: &console::Term, todo_hashmap: &mut std::collections::H
 }
 
 
+
+fn remove_todo (terminal: &console::Term, todo_hashmap: &mut std::collections::HashMap<i32, Value>){
+
+
+
+    while (true){
+
+
+        match terminal.write_str("Enter TODO ID (0 for Exit): "){
+                
+            Ok(_) => {} // No error, do nothing
+            Err(err) => eprintln!("Error writing line: {}", err),
+        }
+
+
+
+
+        let input: Result<String, std::io::Error> = terminal.read_line();
+
+        
+
+        match input {
+
+            Ok(ref input_ok) => {
+
+
+            
+
+                match input_ok.parse::<i32>() {
+
+                    Ok(input_parsed) => {
+
+                        if (input_parsed == 0){
+                            break;
+                        }
+
+
+                        match todo_hashmap.remove(&input_parsed) {
+                
+                            Some(value_removed) => {
+                                println!("Element with key {} removed.", input_parsed);
+                                break;
+                            }
+                            None => {
+                                
+                                eprintln!("ID Not Found");
+                            }
+        
+                        }
+                    }
+                    Err(error_int) => eprintln!("Error parsing to Int32: {}", error_int),
+                }            
+            }
+            Err(ref err) => eprintln!("Error reading input: {}", err),
+
+        }
+
+
+
+
+
+
+
+    }
+
+}
+
+
 fn load_todos() -> (){
 
 }
 
-fn save_todos() -> (){
-    
+fn save_todos(todo_hashmap: &HashMap<i32, Value>) -> Result<String, serde_json::Error> {
+
+
+
+    let json_str = serde_json::to_string(todo_hashmap)?;
+
+
+    return Ok(json_str)
+
 }
 
 
@@ -305,12 +381,15 @@ fn main() {
                     "0" => {
                         println!("Adding TODO");
                         add_todos(&terminal, &mut todos_hashmap);
+                        
                     }
                     "1" => {
                         println!("Marking as Done"); 
                         mark_as_done(&terminal, &mut todos_hashmap);
                     }
-                    "2" => {println!("Removing TODO"); break;}
+                    "2" => {println!("Removing TODO"); 
+                        remove_todo(&terminal, &mut todos_hashmap);
+                    }
                     "3" => {
                         println!("Listing All TODOs");
                         list_todos(&todos_hashmap);
