@@ -3,7 +3,7 @@
 
 
 
-use rand::{self, random};
+
 use console;
 use std;
 
@@ -13,7 +13,7 @@ struct Value {
     name: String,
     description: String,
     date_limit:String,
-    done:&str,
+    done: String,
 }
 
 
@@ -28,7 +28,7 @@ impl Value {
             name: String::new(),
             description: String::new(),
             date_limit: String::new(),
-            done: "Not Done",
+            done: "Not Done".to_string(),
         };
 
 
@@ -105,7 +105,7 @@ fn add_todos(terminal: &console::Term, todo_list: &mut std::collections::HashMap
 
 
 
-    todo.id = (todo_list.len()+1) as i32;
+    todo.id = get_higher_id(&todo_list) + 1;
 
 
 
@@ -150,58 +150,83 @@ fn list_todos (todo_hashmap: &std::collections::HashMap<i32, Value>) -> (){
     }
 
 
+
+}
+
+
+fn get_higher_id (todo_hasmap: &std::collections::HashMap<i32, Value>) -> i32{
+
+
+    let mut id:i32 = 0;
+
+    for (key, value) in todo_hasmap.iter() {
+        
+        if (id < key){
+            id = key;
+        }
+    }
+
+    return id;
+
 }
 
 
 fn mark_as_done(terminal: &console::Term, todo_hashmap: &mut std::collections::HashMap<i32, Value>) -> (){
 
 
-    match terminal.write_str("Enter TODO ID: "){
+    
+
+    while (true){
+
+        match terminal.write_str("Enter TODO ID (0 for Exit): "){
                 
-        Ok(_) => {} // No error, do nothing
-        Err(err) => eprintln!("Error writing line: {}", err),
-    }
+            Ok(_) => {} // No error, do nothing
+            Err(err) => eprintln!("Error writing line: {}", err),
+        }
+    
+    
+        let input: Result<String, std::io::Error> = terminal.read_line();
+
+        
+
+        match input {
+
+            Ok(ref input_ok) => {
 
 
-    let mut input: Result<String, std::io::Error> = terminal.read_line();
+                let value: Option<&mut Value>;
 
-    match input {
+                match input_ok.parse::<i32>() {
 
-        Ok(_) => {
+                    Ok(input_parsed) => {
 
+                        if (input_parsed == 0){
+                            break;
+                        }
 
+                        value = todo_hashmap.get_mut(&input_parsed);
 
-
-            match input.unwrap().parse::<i32> {
-                Ok(_) => {
-                }
-                Err(err) => eprintln!("Error reading input: {}", err),
+                        match value {
+                
+                            Some(value_unwraped) => {
+                                value_unwraped.done = "Done".to_string();
+                                break;
+                            }
+                            None => {
+                                
+                                eprintln!("ID Not Found");
+                            }
+        
+                        }
+                    }
+                    Err(error_int) => eprintln!("Error parsing to Int32: {}", error_int),
+                }            
             }
-
-
-
-
-
-
-            let value: Option<&Value> = todo_hashmap.get(input.unwrap());
-
-            match value {
-               
-                Some(_) => {
-                    value.unwrap().done = "Done";
-                }
-                None => {
-                    
-                }
-
-            }            
+            Err(ref err) => eprintln!("Error reading input: {}", err),
 
         }
-        Err(err) => eprintln!("Error reading input: {}", err),
 
     }
-
-    
 
 }
 
