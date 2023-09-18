@@ -6,9 +6,13 @@
 
 use console;
 use std;
+//use serde::{Serialize}; // Import the Serialize trait
 use serde_json;
+use serde;
+//use serde_derive;
 
-
+// Define your Value struct with #[derive(Serialize)]
+#[derive(serde::ser::Serialize)]
 struct Value {
     id: i32,
     name: String,
@@ -304,7 +308,7 @@ fn load_todos() -> (){
 
 }
 
-fn save_todos(todo_hashmap: &HashMap<i32, Value>) -> Result<String, serde_json::Error> {
+fn save_todos(todo_hashmap: &std::collections::HashMap<i32, Value>) -> Result<String, serde_json::Error> {
 
 
 

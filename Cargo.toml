@@ -6,6 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-console = {path = "/home/yatata/Software/Rust Crates/console-0.15.7"}
-rand = { path = "/home/yatata/Software/Rust Crates/rand-0.8.5"}
-serde_json = { path = "/home/yatata/Software/Rust Crates/json-1.0.0"}
+console = {path = "/home/yatata/Software/Rust Crates/console-0.15.7" }
+rand = { path = "/home/yatata/Software/Rust Crates/rand-0.8.5" }
+serde_json = { path = "/home/yatata/Software/Rust Crates/serde_json-1.0.0" }
+serde = { path = "/home/yatata/Software/Rust Crates/serde-1.0.188", features = ["derive"] }
+#serde_derive = { path = "/home/yatata/Software/Rust Crates/serde_derive" }
